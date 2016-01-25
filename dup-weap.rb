@@ -49,5 +49,5 @@ items["result"]["items"]
   .sort_by { | item | item["defindex"] }
   .each do | item |
     defitem = defindex[item["defindex"]]
-    puts "#{ item["flag_cannot_trade"] ? "Non-Tradable" : ""} #{quality[item["quality"]]} #{item["quality"]} Level #{item["level"]} #{defitem["name"]}"
+    puts "#{ item["flag_cannot_trade"] ? "Non-Tradable" : ""} #{quality[item["quality"]]} #{item["quality"]} Level #{item["level"]} #{defitem["name"]} #{schema["result"]["originNames"][item["origin"]]["name"]}"
   end
