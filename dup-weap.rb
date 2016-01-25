@@ -3,8 +3,12 @@
 
 # require 'rest-client'
 require 'net/http'
+require 'json'
 
 TF2_APP_ID = 440
+FILE_PATH = '.'
+ITEMS_FILE = "#{FILE_PATH}/inv.json"
+SCHEMA_FILE = "#{FILE_PATH}./schema.json"
 
 def get_items(steam_id = ENV['STEAM_ID'], steam_api_key = ENV['STEAM_API_KEY'], app_id = TF2_APP_ID)
   raise 'Need to provide Steam API key' if steam_api_key.nil?
@@ -13,12 +17,19 @@ def get_items(steam_id = ENV['STEAM_ID'], steam_api_key = ENV['STEAM_API_KEY'], 
   uri = URI("http://api.steampowered.com/IEconItems_#{app_id}/GetPlayerItems/v0001/?key=#{steam_api_key}&SteamID=#{steam_id}")
   result = Net::HTTP.get_response(uri)
   raise 'Failure requesting inventory' unless result.is_a?(Net::HTTPSuccess)
-  File.write('./inv.json', result.body)
+  File.write(ITEMS_FILE, result.body)
   # Schema
   uri = URI("http://api.steampowered.com/IEconItems_#{app_id}/GetSchema/v0001/?key=#{steam_api_key}")
   result = Net::HTTP.get_response(uri)
   raise 'Failure requesting inventory' unless result.is_a?(Net::HTTPSuccess)
-  File.write('./schema.json', result.body)
+  File.write(SCHEMA_FILE, result.body)
 end
 
-get_items
+# Download items and schema
+# get_items
+
+items = JSON.parse(File.read(ITEMS_FILE))
+items["result"]["items"].sort_by { | item | item["defindex"] }
+  .each do | item |
+    puts "Level #{item["level"]} #{item["defindex"]}"
+  end
