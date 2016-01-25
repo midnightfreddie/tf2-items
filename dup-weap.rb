@@ -7,8 +7,8 @@ require 'json'
 
 TF2_APP_ID = 440
 FILE_PATH = '.'
-ITEMS_FILE = "#{FILE_PATH}/inv.json"
-SCHEMA_FILE = "#{FILE_PATH}./schema.json"
+ITEMS_FILE = "#{FILE_PATH}/items.json"
+SCHEMA_FILE = "#{FILE_PATH}/schema.json"
 
 def get_items(steam_id = ENV['STEAM_ID'], steam_api_key = ENV['STEAM_API_KEY'], app_id = TF2_APP_ID)
   raise 'Need to provide Steam API key' if steam_api_key.nil?
@@ -29,7 +29,18 @@ end
 # get_items
 
 items = JSON.parse(File.read(ITEMS_FILE))
-items["result"]["items"].sort_by { | item | item["defindex"] }
+schema = JSON.parse(File.read(SCHEMA_FILE))
+
+# Build lookup hash table for item descriptions
+defindex = Hash.new
+schema["result"]["items"].each do | item |
+  defindex[item["defindex"]] = item
+end
+
+items["result"]["items"]
+  .select { | item | defindex[item["defindex"]]["craft_class"].eql? "weapon"}
+  .sort_by { | item | item["defindex"] }
   .each do | item |
-    puts "Level #{item["level"]} #{item["defindex"]}"
+    defitem = defindex[item["defindex"]]
+    puts "Level #{item["level"]} #{defitem["name"]} #{defitem["craft_class"]}"
   end
