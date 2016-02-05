@@ -49,8 +49,9 @@ items["result"]["items"]
   .sort_by { | item | item["defindex"] }
   .each do | item |
     defitem = defindex[item["defindex"]]
-    printf("%-12s %-10s Level %3s %-28s %-15s\n",
+    printf("%-12s %-13s %-10s Level %3s %-28s %-15s\n",
       item["flag_cannot_trade"] ? "Non-Tradable" : "",
+      item["flag_cannot_craft"] ? "Non-Craftable" : "",
       quality[item["quality"]],
       item["level"],
       defitem["name"],
