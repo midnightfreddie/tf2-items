@@ -15,8 +15,8 @@
     </tr>
   <% output.each do | row | %>
     <tr>
-      <td><%= row["tradable"] %></td>
-      <td><%= row["craftable"] %></td>
+      <td><%= row["tradable"] ? "" : "No" %></td>
+      <td><%= row["craftable"] ? "" : "No" %></td>
       <td><%= row["quality"] %></td>
       <td><%= row["level"] %></td>
       <td><%= row["name"] %></td>

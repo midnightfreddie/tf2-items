@@ -43,24 +43,33 @@ schema["result"]["qualities"].each do | key, value |
   quality[value] = key
 end
 
-output = Array.new
+weapons = Array.new
 
 items["result"]["items"]
   .select { | item | defindex[item["defindex"]]["craft_class"].eql? "weapon"}
-  .sort_by { | item | item["quality"] }
-  .reverse
-  .sort_by { | item | item["defindex"] }
   .each do | item |
     defitem = defindex[item["defindex"]]
-    output.push({
+    weapons.push({
       "tradable" => !item["flag_cannot_trade"],
       "craftable" => !item["flag_cannot_craft"],
       "quality" => quality[item["quality"]],
       "level" => item["level"],
       "name" => defitem["name"],
-      "origin" => schema["result"]["originNames"][item["origin"]]["name"]
+      "origin" => schema["result"]["originNames"][item["origin"]]["name"],
+      "defindex" => item["defindex"]
     })
   end
+
+output = Array.new
+
+weapons
+.select { | row | weapons.select{ | weapon | weapon["defindex"] == row["defindex"] }.count > 1 }
+.sort_by { | row | row["quality"] }
+.reverse
+.sort_by { | row | row["defindex"] }
+.each do | row |
+  output.push(row)
+end
 
 output.each do | row |
   printf("%-12s %-13s %-10s Level %3s %-28s %-15s\n",
