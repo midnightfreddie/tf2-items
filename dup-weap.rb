@@ -42,6 +42,8 @@ schema["result"]["qualities"].each do | key, value |
   quality[value] = key
 end
 
+output = Array.new
+
 items["result"]["items"]
   .select { | item | defindex[item["defindex"]]["craft_class"].eql? "weapon"}
   .sort_by { | item | item["quality"] }
@@ -49,12 +51,23 @@ items["result"]["items"]
   .sort_by { | item | item["defindex"] }
   .each do | item |
     defitem = defindex[item["defindex"]]
-    printf("%-12s %-13s %-10s Level %3s %-28s %-15s\n",
-      item["flag_cannot_trade"] ? "Non-Tradable" : "",
-      item["flag_cannot_craft"] ? "Non-Craftable" : "",
-      quality[item["quality"]],
-      item["level"],
-      defitem["name"],
-      schema["result"]["originNames"][item["origin"]]["name"]
-    )
+    output.push({
+      "tradable" => !item["flag_cannot_trade"],
+      "craftable" => !item["flag_cannot_craft"],
+      "quality" => quality[item["quality"]],
+      "level" => item["level"],
+      "name" => defitem["name"],
+      "origin" => schema["result"]["originNames"][item["origin"]]["name"]
+    })
   end
+
+output.each do | row |
+  printf("%-12s %-13s %-10s Level %3s %-28s %-15s\n",
+    row["tradable"] ? "" : "Non-Tradable",
+    row["craftable"] ? "" : "Non-Craftable",
+    row["quality"],
+    row["level"],
+    row["name"],
+    row["origin"]
+  )
+end
