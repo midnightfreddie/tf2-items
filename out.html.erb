@@ -1,0 +1,28 @@
+<html>
+<head>
+  <title>TF2 Duplicate Weapons</title>
+</head>
+<body>
+  <h1>TF2 Duplicate Weapons</h1>
+  <table>
+    <tr>
+      <th>Tradable</th>
+      <th>Craftable</th>
+      <th>Quality</th>
+      <th>Level</th>
+      <th>Name</th>
+      <th>Origin</th>
+    </tr>
+  <% output.each do | row | %>
+    <tr>
+      <td><%= row["tradable"] %></td>
+      <td><%= row["craftable"] %></td>
+      <td><%= row["quality"] %></td>
+      <td><%= row["level"] %></td>
+      <td><%= row["name"] %></td>
+      <td><%= row["origin"] %></td>
+    </tr>
+  <% end %>
+  </table>
+</body>
+</html>

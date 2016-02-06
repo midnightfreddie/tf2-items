@@ -4,6 +4,7 @@
 # require 'rest-client'
 require 'net/http'
 require 'json'
+require 'erb'
 
 TF2_APP_ID = 440
 FILE_PATH = '.'
@@ -71,3 +72,6 @@ output.each do | row |
     row["origin"]
   )
 end
+
+renderer = ERB.new(File.read('out.html.erb'))
+File.write('out.html', renderer.result)
