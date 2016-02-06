@@ -56,7 +56,8 @@ items["result"]["items"]
       "level" => item["level"],
       "name" => defitem["name"],
       "origin" => schema["result"]["originNames"][item["origin"]]["name"],
-      "defindex" => item["defindex"]
+      "defindex" => item["defindex"],
+      "qualindex" => item["quality"]
     })
   end
 
@@ -64,7 +65,7 @@ output = Array.new
 
 weapons
 .select { | row | weapons.select{ | weapon | weapon["defindex"] == row["defindex"] }.count > 1 }
-.sort_by { | row | row["quality"] }
+.sort_by { | row | row["qualindex"] }
 .reverse
 .sort_by { | row | row["defindex"] }
 .each do | row |
