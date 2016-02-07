@@ -20,40 +20,35 @@ module SteamInventory
       @item = item
     end
 
-    def test
-      out = Array.new
-      out.push("Test")
-      out.push(@@defindex[@item["defindex"]]["name"])
-      out.push(@@quality[@item["quality"]])
-      out.push(@@origin[@item["origin"]])
-      out.push(self.name)
-      out.push(self.quality)
-      out.push(self.origin)
-      out.push(@item["defindex"])
-
-      out
-    end
     def name
       @@defindex[@item["defindex"]]["name"]
     end
+
     def quality
       @@quality[@item["quality"]]
     end
+
     def origin
       @@origin[@item["origin"]]
     end
+
     def tradable?
       !@item["flag_cannot_trade"]
     end
+
     def craftable?
       !@item["flag_cannot_craft"]
     end
+
     def level
       @item["level"]
     end
+
     def craft_class
       @@defindex[@item["defindex"]]["craft_class"]
     end
+
+    # Allow direct access to the item values
     def raw
       @item
     end
@@ -86,10 +81,6 @@ module SteamInventory
       self.read_files
     end
 
-    def test
-      @items[0].test
-    end
-
     # While storing data in files, use this to read in data. Called from both initialize and get_items
     # Later need to use ActiveRecord or other data store
     def read_files
@@ -98,9 +89,6 @@ module SteamInventory
       items["result"]["items"].each do | item |
         @items.push(Item.new(item))
       end
-      # TODO: Delete these in favor of Items kookups
-      @olditems = items
-      @schema = JSON.parse(File.read(SCHEMA_FILE))
     end
 
     def get_items(steam_id = ENV['STEAM_ID'], steam_api_key = ENV['STEAM_API_KEY'], app_id = TF2_APP_ID)
