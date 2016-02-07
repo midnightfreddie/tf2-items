@@ -13,14 +13,14 @@
       <th>Name</th>
       <th>Origin</th>
     </tr>
-  <% output.each do | row | %>
+  <% items.each do | item | %>
     <tr>
-      <td><%= row["tradable"] ? "" : "No" %></td>
-      <td><%= row["craftable"] ? "" : "No" %></td>
-      <td><%= row["quality"] %></td>
-      <td><%= row["level"] %></td>
-      <td><%= row["name"] %></td>
-      <td><%= row["origin"] %></td>
+      <td><%= item.tradable? ? "" : "No" %></td>
+      <td><%= item.craftable? ? "" : "No" %></td>
+      <td><%= item.quality %></td>
+      <td><%= item.level %></td>
+      <td><%= item.name %></td>
+      <td><%= item.origin %></td>
     </tr>
   <% end %>
   </table>

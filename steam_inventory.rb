@@ -121,10 +121,9 @@ module SteamInventory
       weapons
     end
 
-    def out_html
-      # FIXME: ERB needs proper binding
-      # renderer = ERB.new(File.read('out.html.erb'))
-      # File.write('out.html', renderer.result)
+    def out_html(items)
+      renderer = ERB.new(File.read('out.html.erb'))
+      renderer.result(binding)
     end
 
     def out_text(items)
