@@ -14,9 +14,12 @@ module SteamInventory
   class Item
     @@schema = nil
     def initialize(item)
+      # puts "Hi" unless @@schema
       @@schema = JSON.parse(File.read(SCHEMA_FILE)) unless @@schema
-      puts "Hi" unless @@schema
       @item = item
+    end
+    def puts_schema
+      puts @@schema
     end
   end
 
@@ -28,9 +31,13 @@ module SteamInventory
     # While storing data in files, use this to read in data. Called from both initialize and get_items
     # Later need to use ActiveRecord or other data store
     def read_files
+      @items = Array.new
       items = JSON.parse(File.read(ITEMS_FILE))
-      @items = items
-      # TODO: Delete this in favor of Items kookups
+      items["result"]["items"].each do | item |
+        @items.push(Item.new(item))
+      end
+      # TODO: Delete these in favor of Items kookups
+      @olditems = items
       @schema = JSON.parse(File.read(SCHEMA_FILE))
     end
 
@@ -67,7 +74,7 @@ module SteamInventory
 
       weapons = Array.new
 
-      @items["result"]["items"]
+      @olditems["result"]["items"]
         .select { | item | defindex[item["defindex"]]["craft_class"].eql? "weapon"}
         .each do | item |
           defitem = defindex[item["defindex"]]
