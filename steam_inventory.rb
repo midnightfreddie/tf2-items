@@ -21,7 +21,12 @@ module SteamInventory
     end
 
     def test
-      "Hi"
+      out = Array.new
+      out.push("Test")
+      out.push(@@defindex[@item["defindex"]]["name"])
+      out.push(@@quality[@item["quality"]])
+      out.push(@@origin[@item["origin"]])
+      out
     end
 
     # debug
@@ -35,6 +40,16 @@ module SteamInventory
       @@defindex = Hash.new
       schema["result"]["items"].each do | itemdef |
         @@defindex[itemdef["defindex"]] = itemdef
+      end
+
+      @@quality = Hash.new
+      schema["result"]["qualities"].each do | key, value |
+        @@quality[value] = key
+      end
+
+      @@origin = Hash.new
+      schema["result"]["originNames"].each do | origin |
+        @@origin[origin["origin"]] = origin["name"]
       end
 
       @@schema = schema
