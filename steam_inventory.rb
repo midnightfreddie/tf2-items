@@ -29,6 +29,8 @@ module SteamInventory
       out.push(self.name)
       out.push(self.quality)
       out.push(self.origin)
+      out.push(@item["defindex"])
+
       out
     end
     def name
@@ -48,6 +50,12 @@ module SteamInventory
     end
     def level
       @item["level"]
+    end
+    def craft_class
+      @@defindex[@item["defindex"]]["craft_class"]
+    end
+    def raw
+      @item
     end
 
     def init_schema
@@ -111,64 +119,39 @@ module SteamInventory
       self.read_files
     end
 
-    # Download items and schema
-    # get_items
-
     def dup_weap
-      # Build lookup hash table for item descriptions because array index is sparse
-      defindex = Hash.new
-      @schema["result"]["items"].each do | item |
-        defindex[item["defindex"]] = item
-      end
-
-      quality = Hash.new
-      @schema["result"]["qualities"].each do | key, value |
-        quality[value] = key
-      end
-
       weapons = Array.new
-
-      @olditems["result"]["items"]
-        .select { | item | defindex[item["defindex"]]["craft_class"].eql? "weapon"}
+      @items
+        .select { | item | item.craft_class.eql? "weapon"}
+        .select { | item | @items.select{ | allitem | allitem.raw["defindex"] == item.raw["defindex"] }.count > 1 }
+        .sort_by { | item | item.raw["quality"] }
+        .reverse
+        .sort_by { | item | item.raw["defindex"] }
         .each do | item |
-          defitem = defindex[item["defindex"]]
-          weapons.push({
-            "tradable" => !item["flag_cannot_trade"],
-            "craftable" => !item["flag_cannot_craft"],
-            "quality" => quality[item["quality"]],
-            "level" => item["level"],
-            "name" => defitem["name"],
-            "origin" => @schema["result"]["originNames"][item["origin"]]["name"],
-            "defindex" => item["defindex"],
-            "qualindex" => item["quality"]
-          })
+          weapons.push(item)
         end
-
-      output = Array.new
-
       weapons
-      .select { | row | weapons.select{ | weapon | weapon["defindex"] == row["defindex"] }.count > 1 }
-      .sort_by { | row | row["qualindex"] }
-      .reverse
-      .sort_by { | row | row["defindex"] }
-      .each do | row |
-        output.push(row)
-      end
+    end
 
-      output.each do | row |
-        printf("%-12s %-13s %-10s Level %3s %-28s %-15s\n",
-          row["tradable"] ? "" : "Non-Tradable",
-          row["craftable"] ? "" : "Non-Craftable",
-          row["quality"],
-          row["level"],
-          row["name"],
-          row["origin"]
-        )
-      end
-
+    def out_html
       # FIXME: ERB needs proper binding
       # renderer = ERB.new(File.read('out.html.erb'))
       # File.write('out.html', renderer.result)
+    end
+
+    def out_text(items)
+      output = String.new
+      items.each do | item |
+        output << sprintf("%-12s %-13s %-10s Level %3s %-28s %-15s\n",
+          item.tradable? ? "" : "Non-Tradable",
+          item.craftable? ? "" : "Non-Craftable",
+          item.quality,
+          item.level,
+          item.name,
+          item.origin
+        )
+      end
+      output
     end
   end
 end
