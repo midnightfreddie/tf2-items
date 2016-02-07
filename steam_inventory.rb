@@ -12,11 +12,12 @@ module SteamInventory
 
   # Will contain lookup methods for names
   class Item
-    @@schema = nil
     @@defindex = nil
+    @@quality = nil
+    @@origin = nil
+
     def initialize(item)
-      # puts "Hi" unless @@schema
-      self.init_schema  unless @@schema
+      self.init_schema  unless @@defindex
       @item = item
     end
 
@@ -71,8 +72,6 @@ module SteamInventory
       schema["result"]["originNames"].each do | origin |
         @@origin[origin["origin"]] = origin["name"]
       end
-
-      @@schema = schema
     end
   end
 
@@ -91,6 +90,9 @@ module SteamInventory
       end
     end
 
+    # Fetches updated items list and schema
+    # TODO: break this into different methods
+    # TODO: Store in database instead of files
     def get_items(steam_id = ENV['STEAM_ID'], steam_api_key = ENV['STEAM_API_KEY'], app_id = TF2_APP_ID)
       raise 'Need to provide Steam API key' if steam_api_key.nil?
       raise 'Need to provide Steam ID' if steam_id.nil?
