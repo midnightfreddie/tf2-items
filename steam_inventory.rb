@@ -123,7 +123,14 @@ module SteamInventory
       weapons
     end
 
-    def out_html(items)
+    # scrappable is the origin value that you concisder scrappable. In tf2, 0 is "Timed Drop"
+    # This will return results with duplicate weapons that include a scrappable origin
+    def scrap_weap(scrappable = 0)
+      self.dup_weap
+        .select { | item | @items.select { | allitem | ( allitem.raw["origin"] == scrappable ) && ( allitem.raw["defindex"] == item.raw["defindex"] )}.count > 0 }
+    end
+
+    def out_html(items, title = "Inventory Items")
       renderer = ERB.new(File.read('out.html.erb'))
       renderer.result(binding)
     end
