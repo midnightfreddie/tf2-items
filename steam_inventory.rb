@@ -13,19 +13,41 @@ module SteamInventory
   # Will contain lookup methods for names
   class Item
     @@schema = nil
+    @@defindex = nil
     def initialize(item)
       # puts "Hi" unless @@schema
-      @@schema = JSON.parse(File.read(SCHEMA_FILE)) unless @@schema
+      self.init_schema  unless @@schema
       @item = item
     end
-    def puts_schema
-      puts @@schema
+
+    def test
+      "Hi"
+    end
+
+    # debug
+    # def puts_schema
+    #   puts @@schema
+    # end
+    def init_schema
+      schema = JSON.parse(File.read(SCHEMA_FILE))
+
+      # Build lookup hash table for item descriptions because array index is sparse
+      @@defindex = Hash.new
+      schema["result"]["items"].each do | itemdef |
+        @@defindex[itemdef["defindex"]] = itemdef
+      end
+
+      @@schema = schema
     end
   end
 
   class Items
     def initialize
       self.read_files
+    end
+
+    def test
+      @items[0].test
     end
 
     # While storing data in files, use this to read in data. Called from both initialize and get_items
