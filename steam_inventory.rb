@@ -26,13 +26,30 @@ module SteamInventory
       out.push(@@defindex[@item["defindex"]]["name"])
       out.push(@@quality[@item["quality"]])
       out.push(@@origin[@item["origin"]])
+      out.push(self.name)
+      out.push(self.quality)
+      out.push(self.origin)
       out
     end
+    def name
+      @@defindex[@item["defindex"]]["name"]
+    end
+    def quality
+      @@quality[@item["quality"]]
+    end
+    def origin
+      @@origin[@item["origin"]]
+    end
+    def tradable?
+      !@item["flag_cannot_trade"]
+    end
+    def craftable?
+      !@item["flag_cannot_craft"]
+    end
+    def level
+      @item["level"]
+    end
 
-    # debug
-    # def puts_schema
-    #   puts @@schema
-    # end
     def init_schema
       schema = JSON.parse(File.read(SCHEMA_FILE))
 
