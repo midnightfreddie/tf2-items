@@ -32,6 +32,7 @@ class Tf2_Items
     result = Net::HTTP.get_response(uri)
     raise 'Failure requesting inventory' unless result.is_a?(Net::HTTPSuccess)
     File.write(SCHEMA_FILE, result.body)
+    self.read_files
   end
 
   # Download items and schema
@@ -40,18 +41,18 @@ class Tf2_Items
   def dup_weap
     # Build lookup hash table for item descriptions because array index is sparse
     defindex = Hash.new
-    schema["result"]["items"].each do | item |
+    @schema["result"]["items"].each do | item |
       defindex[item["defindex"]] = item
     end
 
     quality = Hash.new
-    schema["result"]["qualities"].each do | key, value |
+    @schema["result"]["qualities"].each do | key, value |
       quality[value] = key
     end
 
     weapons = Array.new
 
-    items["result"]["items"]
+    @items["result"]["items"]
       .select { | item | defindex[item["defindex"]]["craft_class"].eql? "weapon"}
       .each do | item |
         defitem = defindex[item["defindex"]]
@@ -61,7 +62,7 @@ class Tf2_Items
           "quality" => quality[item["quality"]],
           "level" => item["level"],
           "name" => defitem["name"],
-          "origin" => schema["result"]["originNames"][item["origin"]]["name"],
+          "origin" => @schema["result"]["originNames"][item["origin"]]["name"],
           "defindex" => item["defindex"],
           "qualindex" => item["quality"]
         })
@@ -89,7 +90,8 @@ class Tf2_Items
       )
     end
 
-    renderer = ERB.new(File.read('out.html.erb'))
-    File.write('out.html', renderer.result)
+    # FIXME: ERB needs proper binding
+    # renderer = ERB.new(File.read('out.html.erb'))
+    # File.write('out.html', renderer.result)
   end
 end
