@@ -10,13 +10,27 @@ module SteamInventory
   ITEMS_FILE = "#{FILE_PATH}/items.json"
   SCHEMA_FILE = "#{FILE_PATH}/schema.json"
 
-  class Tf2Items
+  # Will contain lookup methods for names
+  class Item
+    @@schema = nil
+    def initialize(item)
+      @@schema = JSON.parse(File.read(SCHEMA_FILE)) unless @@schema
+      puts "Hi" unless @@schema
+      @item = item
+    end
+  end
+
+  class Items
     def initialize
       self.read_files
     end
 
+    # While storing data in files, use this to read in data. Called from both initialize and get_items
+    # Later need to use ActiveRecord or other data store
     def read_files
-      @items = JSON.parse(File.read(ITEMS_FILE))
+      items = JSON.parse(File.read(ITEMS_FILE))
+      @items = items
+      # TODO: Delete this in favor of Items kookups
       @schema = JSON.parse(File.read(SCHEMA_FILE))
     end
 
