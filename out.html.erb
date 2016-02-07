@@ -13,7 +13,7 @@
       <th>Name</th>
       <th>Origin</th>
     </tr>
-  <% items.each do | item | %>
+  <% items.each do | item | -%>
     <tr>
       <td><%= item.tradable? ? "" : "No" %></td>
       <td><%= item.craftable? ? "" : "No" %></td>
@@ -22,7 +22,7 @@
       <td><%= item.name %></td>
       <td><%= item.origin %></td>
     </tr>
-  <% end %>
+  <% end -%>
   </table>
 </body>
 </html>

@@ -126,8 +126,7 @@ module SteamInventory
     end
 
     def out_html(items, title = "Inventory Items")
-      renderer = ERB.new(File.read('out.html.erb'))
-      renderer.result(binding)
+      ERB.new(File.read('out.html.erb'), nil, '-').result(binding)
     end
 
     def out_text(items)
