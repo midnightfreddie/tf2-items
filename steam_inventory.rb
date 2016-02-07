@@ -110,17 +110,12 @@ module SteamInventory
     end
 
     def dup_weap
-      weapons = Array.new
       @items
         .select { | item | item.craft_class.eql? "weapon"}
         .select { | item | @items.select{ | allitem | allitem.raw["defindex"] == item.raw["defindex"] }.count > 1 }
         .sort_by { | item | item.raw["quality"] }
         .reverse
         .sort_by { | item | item.raw["defindex"] }
-        .each do | item |
-          weapons.push(item)
-        end
-      weapons
     end
 
     # scrappable is the origin value that you concisder scrappable. In tf2, 0 is "Timed Drop"
