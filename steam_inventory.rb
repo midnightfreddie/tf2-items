@@ -49,6 +49,10 @@ module SteamInventory
       @@defindex[@item["defindex"]]["craft_class"]
     end
 
+    def image_url
+      @@defindex[@item["defindex"]]["image_url"]
+    end
+
     # Allow direct access to the item values
     def raw
       @item
@@ -125,7 +129,7 @@ module SteamInventory
         .select { | item | @items.select { | allitem | ( allitem.raw["origin"] == scrappable ) && ( allitem.raw["defindex"] == item.raw["defindex"] )}.count > 0 }
     end
 
-    def out_html(items, title = "Inventory Items")
+    def out_html(items, title = "Inventory Items", images: true)
       ERB.new(File.read('out.html.erb'), nil, '-').result(binding)
     end
 
@@ -142,6 +146,10 @@ module SteamInventory
         )
       end
       output
+    end
+
+    def allitems
+      @items
     end
   end
 end

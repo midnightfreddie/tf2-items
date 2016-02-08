@@ -10,18 +10,22 @@
       <th>Craftable</th>
       <th>Quality</th>
       <th>Level</th>
+      <%= "<th>Image</th>" if images %>
       <th>Name</th>
       <th>Origin</th>
     </tr>
-  <% items.each do | item | -%>
+  <% oldefindex = nil -%>
+  <% items.sort_by { | item | item.raw["defindex"]}.each do | item | -%>
     <tr>
       <td><%= item.tradable? ? "" : "No" %></td>
       <td><%= item.craftable? ? "" : "No" %></td>
       <td><%= item.quality %></td>
       <td><%= item.level %></td>
+      <%= "<td><img src=\"#{item.image_url}\"></img></td>" if images %>
       <td><%= item.name %></td>
       <td><%= item.origin %></td>
     </tr>
+    <% oldefindex = item.raw["defindex"] -%>
   <% end -%>
   </table>
 </body>
