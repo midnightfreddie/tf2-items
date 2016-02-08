@@ -1,6 +1,11 @@
 <html>
 <head>
   <title><%= title %></title>
+  <style>
+    table, th, td {
+     border: 1px solid black;
+   }
+  </style>
 </head>
 <body>
   <h1><%= title %></h1>
@@ -28,7 +33,7 @@
         defindexcount = items.select { | countitem | countitem.raw["defindex"] == item.raw["defindex"] }.count
         rowspan = defindexcount > 1 ? "rowspan=\"#{defindexcount}\"" : ""
       %>
-        <%= "<td #{rowspan}><img src=\"#{item.image_url}\"></img></td>" if images %>
+        <%= "<td #{rowspan}><img src=\"#{item.image_url}\" alt=\"#{item.name}\"></img></td>" if images %>
         <td <%= rowspan %>><%= item.name %></td>
       <% end -%>
     </tr>
