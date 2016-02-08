@@ -5,6 +5,13 @@
     table, th, td {
      border: 1px solid black;
    }
+   .quality-0 { background-color: #B2B2B2; }
+   .quality-1 { background-color: #4D7455; }
+   .quality-3 { background-color: #476291; }
+   .quality-6 { background-color: #FFD700; }
+   .quality-11 { background-color: #CF6A32; }
+   .quality-13 { background-color: #38F3AB; }
+   .quality-14 { background-color: #AA0000; }
   </style>
 </head>
 <body>
@@ -24,8 +31,8 @@
     <tr>
       <td><%= item.tradable? ? "" : "No" %></td>
       <td><%= item.craftable? ? "" : "No" %></td>
-      <td><%= item.origin %></td>
-      <td><%= item.quality %></td>
+      <td class="origin-<%= item.raw["origin"] %>"><%= item.origin %></td>
+      <td class="quality-<%= item.raw["quality"] %>"><%= item.quality %></td>
       <td><%= item.level %></td>
       <%
         # Rowspan name and image
